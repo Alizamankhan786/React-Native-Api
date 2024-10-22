@@ -1,18 +1,15 @@
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router'; 
 
 const Home = () => {
   const [users, setUsers] = useState<null | []>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
 
-
-  const handlePress = () => {
-    Alert.alert('Button Pressed!', 'You have clicked the button.');
-  };
+  const router = useRouter(); 
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -43,19 +40,22 @@ const Home = () => {
         {error && <Text style={styles.errorText}>Error occurred, please try again.</Text>}
 
         {users &&
-          users.map((item: {id:String , name:string , email:string , phone: number , website: string} ) => {
+          users.map((item: {id:string, name:string, email:string, phone:number, website:string}) => {
             return (
               <View style={styles.userCard} key={item.id}>
                 <Text style={styles.userName}>{item.name}</Text>
-                <Text style={styles.userDetails}>{item.email}</Text>
-                <Text style={styles.userDetails}>{item.phone}</Text>
-                <Text style={styles.userDetails}>{item.website}</Text>
-                <TouchableOpacity style={styles.button} onPress={handlePress}>
-               <Text style={styles.buttonText}>See Details</Text>
-               </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    router.push({
+                      pathname: 'SingleUser',
+                      params: { userId: item.id },
+                    });
+                  }}
+                >
+                  <Text style={styles.buttonText}>See Details</Text>
+                </TouchableOpacity>
               </View>
-
-              
             );
           })}
       </ScrollView>
@@ -114,11 +114,6 @@ const styles = StyleSheet.create({
     color: '#6200ee',
     marginBottom: 4,
   },
-  userDetails: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 2,
-  },
   button: {
     backgroundColor: '#6200ee',
     paddingVertical: 12,
@@ -126,7 +121,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: `40%`,
     margin: 10,
-    marginLeft: "30%",
+    marginLeft: '30%',
   },
   buttonText: {
     color: '#fff',

@@ -3,8 +3,14 @@ import React from 'react'
 
 const SingleUser = () => {
   return (
-    <View>
-      <Text>SingleUser</Text>
+    <View style={{
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 30,
+    }}>
+      <Text style={{
+        fontSize: 25,
+      }}>SingleUser</Text>
     </View>
   )
 }
